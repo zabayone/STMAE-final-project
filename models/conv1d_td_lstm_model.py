@@ -1,7 +1,7 @@
 import tensorflow as tf
 from models.base_model import BaseModel
 
-class Conv1DTimeDistributedModel(BaseModel):
+class Conv1DTimeDistributedLSTMModel(BaseModel):
     def build(self, input_shape, num_classes):
         model = tf.keras.Sequential()
         model.add(tf.keras.layers.Input(shape=(None, input_shape[1], 1)))
@@ -40,12 +40,14 @@ class Conv1DTimeDistributedModel(BaseModel):
         model.add(tf.keras.layers.Dropout(0.2))
 
         model.add(tf.keras.layers.TimeDistributed(tf.keras.layers.Flatten()))
-        model.add(tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(32, activation='relu')))
+
+        model.add(tf.keras.layers.LSTM(64, return_sequences=True))
 
         model.add(tf.keras.layers.GlobalAveragePooling1D())
+
         model.add(tf.keras.layers.Dropout(0.35))
 
-        model.add(tf.keras.layers.Dense(num_classes, activation='softmax'))
+        model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
         model.summary()
         return model
