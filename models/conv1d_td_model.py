@@ -4,7 +4,7 @@ from models.base_model import BaseModel
 class Conv1DTimeDistributedModel(BaseModel):
     def build(self, input_shape, num_classes):
         model = tf.keras.Sequential()
-        model.add(tf.keras.layers.Input(shape=(None, input_shape[1], 1)))
+        model.add(tf.keras.layers.Input(shape=(None, input_shape[1], input_shape[2])))
 
         model.add(tf.keras.layers.TimeDistributed(
             tf.keras.layers.Conv1D(16, kernel_size=9, activation='relu')))

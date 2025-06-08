@@ -8,7 +8,7 @@ class DataLoader:
         self.mono = mono
         self.slices_per_file = slices_per_file
 
-    def load(self):
+    def load(self, segment=True):
         audio_data = []
         labels = []
 
@@ -19,10 +19,15 @@ class DataLoader:
                     label = os.path.basename(root)
                     try:
                         y, _ = librosa.load(path, sr=self.sample_rate, mono=self.mono)
-                        chunks = self.split_into_chunks(y)
+                        if segment:
+                            chunks = self.split_into_chunks(y)
 
-                        for chunk in chunks:
-                            audio_data.append(chunk)
+                            for chunk in chunks:
+                                audio_data.append(chunk)
+                                labels.append(label)
+
+                        else:
+                            audio_data.append(y)
                             labels.append(label)
 
 
@@ -32,14 +37,24 @@ class DataLoader:
         return audio_data, labels
 
     def split_into_chunks(self, y):
-        total_samples = len(y)
-        chunk_size = total_samples // self.slices_per_file
-
         chunks = []
-        for i in range(self.slices_per_file):
-            start = i * chunk_size
-            end = start + chunk_size
-            chunk = y[start:end]
-            if len(chunk) == chunk_size:  # evita chunk incompleti
-                chunks.append(chunk)
+        if self.mono:
+            total_samples = len(y)
+            chunk_size = total_samples // self.slices_per_file
+            for i in range(self.slices_per_file):
+                start = i * chunk_size
+                end = start + chunk_size
+                chunk = y[start:end]
+                if len(chunk) == chunk_size:
+                    chunks.append(chunk)
+        else:
+            total_samples = y.shape[1]
+            chunk_size = total_samples // self.slices_per_file
+
+            for i in range(self.slices_per_file):
+                start = i * chunk_size
+                end = start + chunk_size
+                chunk = y[:, start:end]
+                if chunk.shape[1] == chunk_size:
+                    chunks.append(chunk)
         return chunks

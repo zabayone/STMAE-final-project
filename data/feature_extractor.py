@@ -21,7 +21,7 @@ class FeatureExtractor:
 
             else:
                 raise ValueError(f"Unknown feature mode: {self.mode}")
-
+            feat = (feat - feat.min()) / (feat.max() - feat.min())
             features.append(feat)
 
         return features

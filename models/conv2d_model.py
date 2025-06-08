@@ -5,7 +5,7 @@ from models.base_model import BaseModel
 class Conv2DModel(BaseModel):
     def build(self, input_shape, num_classes):
         model = models.Sequential([
-            layers.Input(shape=(input_shape[0], input_shape[1], 1)),
+            layers.Input(shape=(input_shape[0], input_shape[1], input_shape[2])),
 
             layers.Conv2D(32, (5, 5), activation='relu', padding='same'),
             layers.BatchNormalization(),
