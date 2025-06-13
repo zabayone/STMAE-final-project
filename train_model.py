@@ -30,7 +30,7 @@ def train_model(model_type, X_train, y_train_enc, X_val, y_val_enc, X_test, y_te
     callbacks = [
         ModelCheckpoint(save_prefix + "_best.h5", monitor="val_accuracy", save_best_only=True, verbose=1),
         EarlyStopping(monitor="val_accuracy", patience=30, restore_best_weights=True, verbose=1),
-        ReduceLROnPlateau(monitor="val_accuracy", factor=0.5, patience=15, verbose=1)
+        ReduceLROnPlateau(monitor="val_accuracy", factor=0.5, patience=5, verbose=1)
     ]
 
     try:
