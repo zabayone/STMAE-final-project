@@ -27,16 +27,16 @@ def prepare_datasets():
         X_all_raw, y_all_enc, test_size=0.2, stratify=y_all_enc, shuffle=True)
 
 
-    # extractor = FeatureExtractor(sample_rate=44100, bands=config.BANDS, mode=config.SIGNAL_PROCESSING_TYPE)
-    # print("estrazione feature dataset train")
-    # X_train = np.array(extractor.extract(X_train_raw))
-    # print("estrazione feature dataset val")
-    # X_val = np.array(extractor.extract(X_val_raw))
-    # print("estrazione feature dataset test")
-    # X_test = np.array(extractor.extract(X_test_raw))
-    # X_train, X_val, X_test, mean, std = normalize_features(X_train, X_val, X_test)
-    #
-    # joblib.dump(le, "label_encoder.pkl")
-    # save_normalization_params(mean, std, os.path.join(config.RESULTS_PATH, "global_norm_stats.pkl"))
+    extractor = FeatureExtractor(sample_rate=44100, bands=config.BANDS, mode=config.SIGNAL_PROCESSING_TYPE)
+    print("estrazione feature dataset train")
+    X_train = np.array(extractor.extract(X_train_raw))
+    print("estrazione feature dataset val")
+    X_val = np.array(extractor.extract(X_val_raw))
+    print("estrazione feature dataset test")
+    X_test = np.array(extractor.extract(X_test_raw))
+    X_train, X_val, X_test, mean, std = normalize_features(X_train, X_val, X_test)
 
-    return X_train_raw, y_train_enc, X_val_raw, y_val_enc, X_test_raw, y_test_enc, le, num_classes
+    joblib.dump(le, "label_encoder.pkl")
+    save_normalization_params(mean, std, os.path.join(config.RESULTS_PATH, "global_norm_stats.pkl"))
+
+    return X_train, y_train_enc, X_val, y_val_enc, X_test, y_test_enc, le, num_classes
